@@ -26,8 +26,13 @@ import {
 } from "recharts";
 
 export default function TerraApp() {
-  const [darkMode, setDarkMode] = useState(false);
-  const [username, setUsername] = useState("Demo User");
+  const [darkMode, setDarkMode] = useState(() => {
+    const saved = localStorage.getItem('terra-darkMode');
+    return saved ? JSON.parse(saved) : false;
+  });
+  const [username, setUsername] = useState(() => {
+    return localStorage.getItem('terra-username') || "Demo User";
+  });
   const [userStats, setUserStats] = useState({
     points: 450,
     streak: 7,
@@ -114,7 +119,9 @@ export default function TerraApp() {
   const [showAddHabit, setShowAddHabit] = useState(false);
   const [newHabitName, setNewHabitName] = useState("");
   const [currentTip, setCurrentTip] = useState(0);
-  const [themeColor, setThemeColor] = useState("#2d5016");
+  const [themeColor, setThemeColor] = useState(() => {
+    return localStorage.getItem('terra-themeColor') || "#2d5016";
+  });
 
   const tips = [
     "💡 Use reusable shopping bags to reduce plastic waste",
@@ -133,6 +140,18 @@ export default function TerraApp() {
     lightbulb: FaLightbulb,
     seedling: FaSeedling,
   };
+
+  useEffect(() => {
+    localStorage.setItem('terra-darkMode', JSON.stringify(darkMode));
+  }, [darkMode]);
+
+  useEffect(() => {
+    localStorage.setItem('terra-username', username);
+  }, [username]);
+
+  useEffect(() => {
+    localStorage.setItem('terra-themeColor', themeColor);
+  }, [themeColor]);
 
   useEffect(() => {
     const tipInterval = setInterval(() => {
@@ -206,12 +225,11 @@ export default function TerraApp() {
         transition: "background-color 0.3s ease",
       }}
     >
-      {/* Header */}
       <div
         style={{
           backgroundColor: themeColor,
           color: "white",
-          padding: "20px 24px",
+          padding: "16px 20px",
           borderBottom: `1px solid ${darkMode ? "#333" : "#ddd"}`,
         }}
       >
@@ -222,13 +240,15 @@ export default function TerraApp() {
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
+            flexWrap: "wrap",
+            gap: "12px",
           }}
         >
-          <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
             <div
               style={{
-                width: "48px",
-                height: "48px",
+                width: "40px",
+                height: "40px",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
@@ -244,7 +264,7 @@ export default function TerraApp() {
               <h1
                 style={{
                   margin: 0,
-                  fontSize: "28px",
+                  fontSize: "22px",
                   fontWeight: 700,
                   letterSpacing: "-0.5px",
                 }}
@@ -254,12 +274,12 @@ export default function TerraApp() {
               <p
                 style={{
                   margin: 0,
-                  fontSize: "13px",
+                  fontSize: "11px",
                   opacity: 0.85,
                   fontWeight: 500,
                 }}
               >
-                Sustainable Living Tracker
+                Sustainable Living
               </p>
             </div>
           </div>
@@ -309,22 +329,21 @@ export default function TerraApp() {
       </div>
 
       <div
-        style={{ maxWidth: "1200px", margin: "0 auto", padding: "32px 24px" }}
+        style={{ maxWidth: "1200px", margin: "0 auto", padding: "20px 16px" }}
       >
-        {/* Welcome */}
         <div
           style={{
             backgroundColor: paperColor,
-            padding: "32px",
+            padding: "24px 20px",
             borderRadius: "16px",
-            marginBottom: "24px",
+            marginBottom: "20px",
             border: `1px solid ${borderColor}`,
           }}
         >
           <h2
             style={{
               margin: "0 0 8px 0",
-              fontSize: "32px",
+              fontSize: "24px",
               fontWeight: 700,
               color: themeColor,
               letterSpacing: "-0.5px",
@@ -334,42 +353,41 @@ export default function TerraApp() {
           </h2>
           <p
             style={{
-              margin: "0 0 32px 0",
+              margin: "0 0 24px 0",
               color: secondaryText,
-              fontSize: "15px",
+              fontSize: "14px",
             }}
           >
-            Every small action counts towards a sustainable future 🌱
+            Every small action counts 🌱
           </p>
 
-          {/* Stats */}
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
-              gap: "16px",
-              marginBottom: "24px",
+              gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))",
+              gap: "12px",
+              marginBottom: "20px",
             }}
           >
             <div
               style={{
                 backgroundColor: darkMode ? "#252525" : "#f5f5f5",
-                padding: "24px",
+                padding: "20px 16px",
                 borderRadius: "12px",
                 textAlign: "center",
                 border: `1px solid ${borderColor}`,
               }}
             >
               <FaTrophy
-                size={28}
+                size={24}
                 color={themeColor}
-                style={{ marginBottom: "12px" }}
+                style={{ marginBottom: "10px" }}
               />
               <div
                 style={{
-                  fontSize: "36px",
+                  fontSize: "28px",
                   fontWeight: 700,
-                  margin: "8px 0",
+                  margin: "6px 0",
                   letterSpacing: "-1px",
                 }}
               >
@@ -377,7 +395,7 @@ export default function TerraApp() {
               </div>
               <div
                 style={{
-                  fontSize: "13px",
+                  fontSize: "11px",
                   color: secondaryText,
                   fontWeight: 500,
                   textTransform: "uppercase",
@@ -390,22 +408,22 @@ export default function TerraApp() {
             <div
               style={{
                 backgroundColor: darkMode ? "#252525" : "#f5f5f5",
-                padding: "24px",
+                padding: "20px 16px",
                 borderRadius: "12px",
                 textAlign: "center",
                 border: `1px solid ${borderColor}`,
               }}
             >
               <FaLeaf
-                size={28}
+                size={24}
                 color="#8bc34a"
-                style={{ marginBottom: "12px" }}
+                style={{ marginBottom: "10px" }}
               />
               <div
                 style={{
-                  fontSize: "36px",
+                  fontSize: "28px",
                   fontWeight: 700,
-                  margin: "8px 0",
+                  margin: "6px 0",
                   letterSpacing: "-1px",
                 }}
               >
@@ -413,7 +431,7 @@ export default function TerraApp() {
               </div>
               <div
                 style={{
-                  fontSize: "13px",
+                  fontSize: "11px",
                   color: secondaryText,
                   fontWeight: 500,
                   textTransform: "uppercase",
@@ -426,22 +444,22 @@ export default function TerraApp() {
             <div
               style={{
                 backgroundColor: darkMode ? "#252525" : "#f5f5f5",
-                padding: "24px",
+                padding: "20px 16px",
                 borderRadius: "12px",
                 textAlign: "center",
                 border: `1px solid ${borderColor}`,
               }}
             >
               <FaFire
-                size={28}
+                size={24}
                 color="#ff9800"
-                style={{ marginBottom: "12px" }}
+                style={{ marginBottom: "10px" }}
               />
               <div
                 style={{
-                  fontSize: "36px",
+                  fontSize: "28px",
                   fontWeight: 700,
-                  margin: "8px 0",
+                  margin: "6px 0",
                   letterSpacing: "-1px",
                 }}
               >
@@ -449,19 +467,18 @@ export default function TerraApp() {
               </div>
               <div
                 style={{
-                  fontSize: "13px",
+                  fontSize: "11px",
                   color: secondaryText,
                   fontWeight: 500,
                   textTransform: "uppercase",
                   letterSpacing: "0.5px",
                 }}
               >
-                Day Streak
+                Streak
               </div>
             </div>
           </div>
 
-          {/* Progress Bar */}
           <div>
             <div
               style={{
@@ -498,13 +515,12 @@ export default function TerraApp() {
           </div>
         </div>
 
-        {/* Tips */}
         <div
           style={{
             backgroundColor: paperColor,
-            padding: "28px",
+            padding: "20px",
             borderRadius: "16px",
-            marginBottom: "24px",
+            marginBottom: "20px",
             textAlign: "center",
             border: `1px solid ${borderColor}`,
           }}
@@ -523,9 +539,9 @@ export default function TerraApp() {
           </div>
           <div
             style={{
-              fontSize: "17px",
+              fontSize: "15px",
               fontWeight: 500,
-              marginBottom: "20px",
+              marginBottom: "16px",
               lineHeight: "1.6",
               color: textColor,
             }}
@@ -558,15 +574,14 @@ export default function TerraApp() {
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
-            gap: "24px",
+            gridTemplateColumns: "1fr",
+            gap: "20px",
           }}
         >
-          {/* Habits */}
           <div
             style={{
               backgroundColor: paperColor,
-              padding: "28px",
+              padding: "24px 20px",
               borderRadius: "16px",
               border: `1px solid ${borderColor}`,
             }}
@@ -576,13 +591,13 @@ export default function TerraApp() {
                 display: "flex",
                 justifyContent: "space-between",
                 alignItems: "center",
-                marginBottom: "24px",
+                marginBottom: "20px",
               }}
             >
               <h3
                 style={{
                   margin: 0,
-                  fontSize: "22px",
+                  fontSize: "20px",
                   fontWeight: 700,
                   letterSpacing: "-0.5px",
                 }}
@@ -635,6 +650,7 @@ export default function TerraApp() {
                     color: textColor,
                     fontSize: "15px",
                     fontFamily: "inherit",
+                    boxSizing: "border-box",
                   }}
                 />
                 <div style={{ display: "flex", gap: "10px" }}>
@@ -768,20 +784,19 @@ export default function TerraApp() {
             </div>
           </div>
 
-          {/* Progress */}
           <div
             style={{
               backgroundColor: paperColor,
-              padding: "28px",
+              padding: "24px 20px",
               borderRadius: "16px",
               border: `1px solid ${borderColor}`,
             }}
           >
-            <div style={{ marginBottom: "24px" }}>
+            <div style={{ marginBottom: "20px" }}>
               <h3
                 style={{
                   margin: "0 0 8px 0",
-                  fontSize: "22px",
+                  fontSize: "20px",
                   fontWeight: 700,
                   letterSpacing: "-0.5px",
                 }}
@@ -796,7 +811,6 @@ export default function TerraApp() {
               </p>
             </div>
 
-            {/* Legend for chart */}
             <div
               style={{
                 display: "flex",
@@ -850,10 +864,10 @@ export default function TerraApp() {
               </div>
             </div>
 
-            <ResponsiveContainer width="100%" height={240}>
+            <ResponsiveContainer width="100%" height={200}>
               <LineChart
                 data={progressData}
-                margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
+                margin={{ top: 10, right: 5, left: -25, bottom: 0 }}
               >
                 <CartesianGrid
                   strokeDasharray="3 3"
@@ -915,7 +929,6 @@ export default function TerraApp() {
               </LineChart>
             </ResponsiveContainer>
 
-            {/* Stats */}
             <div
               style={{
                 display: "grid",
@@ -1022,20 +1035,18 @@ export default function TerraApp() {
             </div>
           </div>
 
-          {/* Badges */}
           <div
             style={{
               backgroundColor: paperColor,
-              padding: "28px",
+              padding: "24px 20px",
               borderRadius: "16px",
               border: `1px solid ${borderColor}`,
-              gridColumn: "span 2",
             }}
           >
             <h3
               style={{
-                margin: "0 0 24px 0",
-                fontSize: "22px",
+                margin: "0 0 20px 0",
+                fontSize: "20px",
                 fontWeight: 700,
                 letterSpacing: "-0.5px",
               }}
@@ -1045,8 +1056,8 @@ export default function TerraApp() {
             <div
               style={{
                 display: "grid",
-                gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))",
-                gap: "16px",
+                gridTemplateColumns: "repeat(auto-fill, minmax(140px, 1fr))",
+                gap: "12px",
               }}
             >
               {badges.map((badge) => {
@@ -1055,7 +1066,7 @@ export default function TerraApp() {
                   <div
                     key={badge.id}
                     style={{
-                      padding: "24px",
+                      padding: "20px 16px",
                       backgroundColor: darkMode ? "#252525" : "#f5f5f5",
                       borderRadius: "12px",
                       textAlign: "center",
@@ -1071,11 +1082,11 @@ export default function TerraApp() {
                       style={{
                         display: "flex",
                         justifyContent: "center",
-                        marginBottom: "16px",
+                        marginBottom: "12px",
                       }}
                     >
                       <BadgeIcon
-                        size={40}
+                        size={32}
                         color={badge.unlocked ? "#ffd700" : secondaryText}
                       />
                     </div>
@@ -1083,17 +1094,17 @@ export default function TerraApp() {
                       style={{
                         fontWeight: 600,
                         marginBottom: "6px",
-                        fontSize: "15px",
+                        fontSize: "14px",
                       }}
                     >
                       {badge.name}
                     </div>
                     <div
                       style={{
-                        fontSize: "12px",
+                        fontSize: "11px",
                         color: secondaryText,
                         lineHeight: "1.4",
-                        marginBottom: "12px",
+                        marginBottom: "10px",
                         flex: 1,
                       }}
                     >
@@ -1101,12 +1112,12 @@ export default function TerraApp() {
                     </div>
                     <div
                       style={{
-                        fontSize: "11px",
+                        fontSize: "10px",
                         color: badge.unlocked ? themeColor : "transparent",
                         fontWeight: 700,
                         textTransform: "uppercase",
                         letterSpacing: "0.5px",
-                        minHeight: "16px",
+                        minHeight: "14px",
                       }}
                     >
                       {badge.unlocked ? "UNLOCKED ✓" : "​"}
@@ -1119,7 +1130,6 @@ export default function TerraApp() {
         </div>
       </div>
 
-      {/* Badges */}
       {showBadgePopup && (
         <div
           style={{
@@ -1128,7 +1138,7 @@ export default function TerraApp() {
             left: "50%",
             transform: "translate(-50%, -50%)",
             backgroundColor: paperColor,
-            padding: "48px",
+            padding: "36px 24px",
             borderRadius: "20px",
             boxShadow: darkMode
               ? "0 20px 60px rgba(0,0,0,0.5)"
@@ -1137,14 +1147,15 @@ export default function TerraApp() {
             textAlign: "center",
             border: `1px solid ${borderColor}`,
             animation: "popIn 0.3s ease",
-            maxWidth: "400px",
+            maxWidth: "90%",
+            width: "400px",
           }}
         >
-          <div style={{ fontSize: "72px", marginBottom: "20px" }}>🏆</div>
+          <div style={{ fontSize: "60px", marginBottom: "16px" }}>🏆</div>
           <h2
             style={{
-              margin: "0 0 12px 0",
-              fontSize: "28px",
+              margin: "0 0 10px 0",
+              fontSize: "24px",
               color: themeColor,
               fontWeight: 700,
               letterSpacing: "-0.5px",
@@ -1152,16 +1163,15 @@ export default function TerraApp() {
           >
             Badge Unlocked!
           </h2>
-          <p style={{ margin: "0 0 8px 0", fontSize: "20px", fontWeight: 600 }}>
+          <p style={{ margin: "0 0 6px 0", fontSize: "18px", fontWeight: 600 }}>
             {showBadgePopup.name}
           </p>
-          <p style={{ margin: 0, color: secondaryText, fontSize: "15px" }}>
+          <p style={{ margin: 0, color: secondaryText, fontSize: "14px" }}>
             {showBadgePopup.desc}
           </p>
         </div>
       )}
 
-      {/* Customization */}
       {showProfileModal && (
         <div
           style={{
@@ -1250,6 +1260,7 @@ export default function TerraApp() {
                   color: textColor,
                   fontSize: "15px",
                   fontFamily: "inherit",
+                  boxSizing: "border-box",
                 }}
               />
             </div>
